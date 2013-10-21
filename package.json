@@ -34,7 +34,8 @@
     "grunt": "~0.4.1"
   },
   "peerDependencies": {
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "phantomjs": "~1.9.2-2"
   },
   "keywords": [
     "gruntplugin"

@@ -32,6 +32,8 @@ module.exports = function(grunt) {
     phantomcss: {
       default_options: {
         options: {
+            libraryRoot: "",
+            screenshotRoot: "",
         },
         files: {
           'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
