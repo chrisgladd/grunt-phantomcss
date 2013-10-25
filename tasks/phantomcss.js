@@ -12,57 +12,40 @@ var path = require('path');
 module.exports = function(grunt) {
     var _ = grunt.util._;
 
-    // Please see the Grunt documentation for more information regarding task
-    // creation: http://gruntjs.com/creating-tasks
-
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function(){
         var done = this.async();
         var options = this.options({
             //background: false,
-            //punctuation: '.',
-            //separator: ', '
         });
         var data = this.data;
         data = _.merge(options, data);
 
-        /*// Iterate over all specified file groups.*/
-        //this.files.forEach(function(f) {
-            //// Concat specified files.
-            //var src = f.src.filter(function(filepath) {
-                //// Warn on and remove invalid source files (if nonull was set).
-                //if (!grunt.file.exists(filepath)) {
-                    //grunt.log.warn('Source file "' + filepath + '" not found.');
-                    //return false;
-                //} else {
-                    //return true;
-                //}
-            //}).map(function(filepath) {
-                //// Read file source.
-                //return grunt.file.read(filepath);
-            //}).join(grunt.util.normalizelf(options.separator));
-
-            //// Handle options.
-            //src += options.punctuation;
-
-            //// Write the destination file.
-            //grunt.file.write(f.dest, src);
-
-            //// Print a success message.
-            //grunt.log.writeln('File "' + f.dest + '" created.');
-        /*});*/
-        console.log("Config File: ", options.configFile);
-        console.log("Parsed Filepath: ", path.join(__dirname, '..', options.configFile));
+        grunt.verbose.log("Config File: ", options.configFile);
+        var cssopt = {
+          "phantomcss": {
+            "screenshots": options.screenshots,
+            "failures": options.failures,
+          }
+        };
         grunt.util.spawn({
-            "cmd": 'bower_components/phantomcss/phantomjs', 
+            "cmd": 'phantomjs', 
             "args": [
-                path.join(__dirname, '..', options.configFile),
-                //path.join(__dirname, '..', 'lib', 'background.js'),
+                //joined
+                //options.configFile
+                '../../'+options.configFile,
+                //path.join(__dirname, '..', options.configFile),
                 //JSON.stringify(data)
             ],
-            "opts": {stdio: 'inherit'}
+            "opts": {
+                cwd: 'bower_components/phantomcss/',
+                //env: _.merge(process.env, cssopt),
+                stdio: 'inherit'
+            }
         }, function DoneFunction(error, result, code){
-            console.log("SPAWN ON FINISH");
-            console.log(arguments);
+            //console.log("SPAWN ON FINISH");
+            //console.log(arguments);
+            if(error){ done(false); }
+            else{ done(); }
         });
     });
 };
