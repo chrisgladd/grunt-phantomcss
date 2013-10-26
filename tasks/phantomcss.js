@@ -9,15 +9,13 @@
 
 var path = require('path');
 
-module.exports = function(grunt) {
-    var _ = grunt.util._;
-    var verbose = grunt.verbose.writeln;
-
+module.exports = function(grunt){
     var desc = 'CSS Regression Testing';
     grunt.registerMultiTask('phantomcss', desc, function(){
         var done = this.async();
         var options = this.options({});
 
+        console.log("Before check: " + options.configFile);
         if(!options.configFile){
             options.configFile = 'config/testsuite.js';
         }
@@ -30,33 +28,28 @@ module.exports = function(grunt) {
             options.failures = 'failures';
         }
 
+        options.configFile = path.resolve(options.configFile);
         options.screenshots = path.resolve(options.screenshots);
         options.failures = path.resolve(options.failures);
 
         grunt.verbose.writeflags(options, 'Options');
 
-        var files = grunt.task.normalizeMultiTaskFiles(this.data);
-        files.forEach(function(filePair){
-            filePair.src.forEach(function(conf){
-                var resolved = path.resolve(conf);
-                var cwd = path.join(__dirname, '..', 'bower_components/phantomcss/');
-                //console.log("CWD: " + cwd);
-                grunt.util.spawn({
-                    "cmd": 'phantomjs',
-                    "args": [
-                        resolved,
-                        //'../../'+options.configFile,
-                        JSON.stringify(options)
-                    ],
-                    "opts": {
-                        cwd: cwd,//'../bower_components/phantomcss/',
-                        stdio: 'inherit'
-                    }
-                }, function DoneFunction(error, result, code){
-                    if(error){ done(false); }
-                    else{ done(); }
-                });
-            });
+        var cwd = path.join(__dirname, '..', 
+                            'bower_components/phantomcss/');
+
+        grunt.util.spawn({
+            "cmd": 'phantomjs',
+            "args": [
+                options.configFile,
+                JSON.stringify(options)
+            ],
+            "opts": {
+                "cwd": cwd,
+                "stdio": 'inherit'
+            }
+        }, function DoneFunction(error, result, code){
+            if(error){ done(false); }
+            else{ done(); }
         });
     });
 };

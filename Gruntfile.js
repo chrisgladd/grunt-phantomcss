@@ -7,7 +7,6 @@
  */
 
 'use strict';
-
 module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
@@ -33,10 +32,11 @@ module.exports = function(grunt) {
         phantomcss: {
             default_options: {
                 options: {
+                    configFile: "config/testsuite.js",
                     screenshots: "screenshots",
                     failures: "failures"
                 },
-                src: ['config/testsuite.js'],
+                //src: ['config/testsuite.js'],
             },
         },
 

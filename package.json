@@ -5,7 +5,7 @@
   "homepage": "https://github.com/chrisgladd/grunt-phantomcss",
   "author": {
     "name": "Chris Gladd",
-    "email": "chris@weconvene.com"
+    "email": "chris.m.gladd@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,6 @@
     "phantomjs": "~1.9.2-2"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin", "phantomcss", "css", "regression", "test", "phantomjs", "grunt"
   ]
 }
