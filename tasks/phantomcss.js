@@ -1,4 +1,4 @@
-/*
+/**
  * grunt-phantomcss
  * https://github.com/chrisgladd/grunt-phantomcss
  *
@@ -11,41 +11,52 @@ var path = require('path');
 
 module.exports = function(grunt) {
     var _ = grunt.util._;
+    var verbose = grunt.verbose.writeln;
 
-    grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function(){
+    var desc = 'CSS Regression Testing';
+    grunt.registerMultiTask('phantomcss', desc, function(){
         var done = this.async();
-        var options = this.options({
-            //background: false,
-        });
-        var data = this.data;
-        data = _.merge(options, data);
+        var options = this.options({});
 
-        grunt.verbose.log("Config File: ", options.configFile);
-        var cssopt = {
-          "phantomcss": {
-            "screenshots": options.screenshots,
-            "failures": options.failures,
-          }
-        };
-        grunt.util.spawn({
-            "cmd": 'phantomjs', 
-            "args": [
-                //joined
-                //options.configFile
-                '../../'+options.configFile,
-                //path.join(__dirname, '..', options.configFile),
-                //JSON.stringify(data)
-            ],
-            "opts": {
-                cwd: 'bower_components/phantomcss/',
-                //env: _.merge(process.env, cssopt),
-                stdio: 'inherit'
-            }
-        }, function DoneFunction(error, result, code){
-            //console.log("SPAWN ON FINISH");
-            //console.log(arguments);
-            if(error){ done(false); }
-            else{ done(); }
+        if(!options.configFile){
+            options.configFile = 'config/testsuite.js';
+        }
+
+        if(!options.screenshots){
+            options.screenshots = 'screenshots';
+        }
+
+        if(!options.failures){
+            options.failures = 'failures';
+        }
+
+        options.screenshots = path.resolve(options.screenshots);
+        options.failures = path.resolve(options.failures);
+
+        grunt.verbose.writeflags(options, 'Options');
+
+        var files = grunt.task.normalizeMultiTaskFiles(this.data);
+        files.forEach(function(filePair){
+            filePair.src.forEach(function(conf){
+                var resolved = path.resolve(conf);
+                var cwd = path.join(__dirname, '..', 'bower_components/phantomcss/');
+                //console.log("CWD: " + cwd);
+                grunt.util.spawn({
+                    "cmd": 'phantomjs',
+                    "args": [
+                        resolved,
+                        //'../../'+options.configFile,
+                        JSON.stringify(options)
+                    ],
+                    "opts": {
+                        cwd: cwd,//'../bower_components/phantomcss/',
+                        stdio: 'inherit'
+                    }
+                }, function DoneFunction(error, result, code){
+                    if(error){ done(false); }
+                    else{ done(); }
+                });
+            });
         });
     });
 };

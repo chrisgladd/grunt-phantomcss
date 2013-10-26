@@ -1,4 +1,10 @@
 /**
+ * Arguments passed in from the grunt task
+ */
+console.log(phantom.args);
+var args = JSON.parse(phantom.args);
+
+/**
  * Initialise CasperJs
  */
 phantom.casperPath = 'CasperJs';
@@ -16,17 +22,15 @@ var phantomcss = require('./phantomcss.js');
 var url = startServer('demo/coffeemachine.html');
 
 phantomcss.init({
-	screenshotRoot: '../../screenshots',
-	failedComparisonsRoot: '../../failures',
+	screenshotRoot: args.screenshots,
+	failedComparisonsRoot: args.failures,
 
     onFail: function(test){ console.log(test.filename, test.mismatch); },
-    onPass: function(test){     console.log(test.filename); },
-    onTimeout: function(test){  console.log(test.filename); },
+    onPass: function(test){ console.log(test.filename); },
+    onTimeout: function(test){ console.log(test.filename); },
     onComplete: function(allTests, noOfFails, noOfErrors){
         allTests.forEach(function(test){
-            if(test.fail){
-                console.log(test.filename, test.mismatch);
-            }
+            if(test.fail){ console.log(test.filename, test.mismatch); }
         });
     }
 });
@@ -69,7 +73,7 @@ casper.start(url).then(function(){
 /**
  * End tests and compare screenshots
  */
-casper.then( function now_check_the_screenshots(){
+casper.then(function now_check_the_screenshots(){
     phantomcss.compareAll();
 }).
 run( function end_it(){

@@ -26,32 +26,18 @@ module.exports = function(grunt) {
         // previously-created files.
         clean: {
             tests: ['tmp'],
+            screenshots: ['screenshots'],
         },
 
         // Configuration to be run (and then tested).
         phantomcss: {
             default_options: {
                 options: {
-                    configFile: "config/testsuite.js",
                     screenshots: "screenshots",
                     failures: "failures"
                 },
-                //files: {
-                    //'tmp/default_options': [
-                        //'test/fixtures/testing', 
-                        //'test/fixtures/123'
-                    //],
-                //},
+                src: ['config/testsuite.js'],
             },
-            //custom_options: {
-                //options: {
-                    //separator: ': ',
-                    //punctuation: ' !!!',
-                //},
-                //files: {
-                    //'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-                //},
-            //},
         },
 
         // Unit tests.
