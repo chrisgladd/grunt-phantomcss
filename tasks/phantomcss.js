@@ -15,7 +15,6 @@ module.exports = function(grunt){
         var done = this.async();
         var options = this.options({});
 
-        console.log("Before check: " + options.configFile);
         if(!options.configFile){
             options.configFile = 'config/testsuite.js';
         }
@@ -23,7 +22,6 @@ module.exports = function(grunt){
         if(!options.screenshots){
             options.screenshots = 'screenshots';
         }
-
         if(!options.failures){
             options.failures = 'failures';
         }
@@ -31,11 +29,14 @@ module.exports = function(grunt){
         options.configFile = path.resolve(options.configFile);
         options.screenshots = path.resolve(options.screenshots);
         options.failures = path.resolve(options.failures);
+        if(options.index){
+            options.index = path.resolve(options.index);
+        }
+        //options.index = path.join('..', '..', options.index);
 
         grunt.verbose.writeflags(options, 'Options');
 
-        var cwd = path.join(__dirname, '..', 
-                            'bower_components/phantomcss/');
+        var cwd = path.join(__dirname, '..', 'bower_components', 'phantomcss');
 
         grunt.util.spawn({
             "cmd": 'phantomjs',

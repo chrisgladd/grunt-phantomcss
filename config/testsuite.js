@@ -1,7 +1,26 @@
 /**
+ * Start the webserver
+ */
+function startServer(path){
+	// Use PhantomJs server to server web page, demo purposes only
+	var fs = require('fs');
+	var server = require('webserver').create();
+	var html = fs.read(path);
+	console.log("HTML response: " + html);
+	
+	var service = server.listen(1337, function(request, response) {
+		response.statusCode = 200;
+		response.write(html);
+		response.close();
+	});
+
+	return 'http://localhost:1337';
+}
+
+/**
  * Arguments passed in from the grunt task
  */
-console.log(phantom.args);
+console.log("Phantom Args" + phantom.args);
 var args = JSON.parse(phantom.args);
 
 /**
@@ -19,16 +38,19 @@ var casper = require('casper').create({
  *	Require and initialise PhantomCSS module
  */
 var phantomcss = require('./phantomcss.js');
-var url = startServer('demo/coffeemachine.html');
+var url = startServer(args.index || 'demo/coffeemachine.html');
 
 phantomcss.init({
-	screenshotRoot: args.screenshots,
-	failedComparisonsRoot: args.failures,
+	screenshotRoot: args.screenshots || './screenshots',
+	failedComparisonsRoot: args.failures || './screenshots',
 
     onFail: function(test){ console.log(test.filename, test.mismatch); },
     onPass: function(test){ console.log(test.filename); },
     onTimeout: function(test){ console.log(test.filename); },
     onComplete: function(allTests, noOfFails, noOfErrors){
+        if(noOfFails + noOfErrors > 0){
+            console.log("There were " + noOfFails + " failures, and " + noOfErrors + " errors");
+        }
         allTests.forEach(function(test){
             if(test.fail){ console.log(test.filename, test.mismatch); }
         });
@@ -80,21 +102,3 @@ run( function end_it(){
     console.log('\nTHE END.');
     phantom.exit(phantomcss.getExitStatus());
 });
-
-/**
- * Start the webserver
- */
-function startServer(path){
-	// Use PhantomJs server to server web page, demo purposes only
-	var fs = require('fs');
-	var server = require('webserver').create();
-	var html = fs.read(path);
-	
-	var service = server.listen(1337, function(request, response) {
-		response.statusCode = 200;
-		response.write(html);
-		response.close();
-	});
-
-	return 'http://localhost:1337';
-}

@@ -14,6 +14,7 @@ module.exports = function(grunt) {
             all: [
                 'Gruntfile.js',
                 'tasks/phantomcss.js',
+                'config/testsuite.js',
                 '<%= nodeunit.tests %>',
             ],
             options: {
@@ -34,7 +35,8 @@ module.exports = function(grunt) {
                 options: {
                     configFile: "config/testsuite.js",
                     screenshots: "screenshots",
-                    failures: "failures"
+                    failures: "failures",
+                    index: "test/coffeemachine.html"
                 },
                 //src: ['config/testsuite.js'],
             },
