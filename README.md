@@ -43,6 +43,30 @@ Default value: `'config/testsuite.js'`
 
 The configuration file to pass into PhantomCSS
 
+#### options.screenshots
+Type: `String`
+Default value: `'./screenshots'`
+
+The screenshots directory to store successful screenshots.
+
+#### options.failures
+Type: `String`
+Default value: `'./failures'`
+
+The failures directory to store failed screenshots
+
+#### options.index
+Type: `String`
+Default value: `'demo/coffeemachine.html'`
+
+The index of the website for the simple webserver to get when started.
+
+#### options.server
+Type: `String`
+Default value: `'http://localhost:8080/index.html'`
+
+The url of an already running server and the initial resource to fetch. This will override the `index` option above and will use the external server to run the tests.
+
 ### Usage Examples
 
 #### Default Options
@@ -61,4 +85,5 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+* 2013-10-24   v0.1.1   Added the ability to use an external server
 * 2013-10-24   v0.1.0   Initial Release
