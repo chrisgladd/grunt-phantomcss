@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         // previously-created files.
         clean: {
             tests: ['tmp'],
-            screenshots: ['screenshots'],
+            screenshots: ['screenshots','failures'],
         },
 
         // Configuration to be run (and then tested).
