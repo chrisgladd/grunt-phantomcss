@@ -6,7 +6,6 @@ function startServer(path){
 	var fs = require('fs');
 	var server = require('webserver').create();
 	var html = fs.read(path);
-	console.log("HTML response: " + html);
 	
 	var service = server.listen(1337, function(request, response) {
 		response.statusCode = 200;

@@ -34,11 +34,16 @@ module.exports = function(grunt) {
             default_options: {
                 options: {
                     configFile: "config/testsuite.js",
-                    screenshots: "screenshots",
+                    screenshots: "test/screenshots",
                     failures: "failures",
                     index: "test/coffeemachine.html"
                 },
-                //src: ['config/testsuite.js'],
+            },
+            compare_only: {
+                options: {
+                    screenshots: "screenshots",
+                    failures: "failures"
+                },
             },
         },
 

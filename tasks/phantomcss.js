@@ -15,8 +15,14 @@ module.exports = function(grunt){
         var done = this.async();
         var options = this.options({});
 
-        if(!options.configFile){
+        // Compare only configuration, no screenshots/tests
+        if(!options.configFile && !options.index){
+            options.configFile = path.join(__dirname, '..', 'config','compare.js');
+        }
+        //Configure via configFile
+        else if(!options.configFile){
             options.configFile = 'config/testsuite.js';
+            options.configFile = path.resolve(options.configFile);
         }
 
         if(!options.screenshots){
@@ -26,13 +32,11 @@ module.exports = function(grunt){
             options.failures = 'failures';
         }
 
-        options.configFile = path.resolve(options.configFile);
         options.screenshots = path.resolve(options.screenshots);
         options.failures = path.resolve(options.failures);
         if(options.index){
             options.index = path.resolve(options.index);
         }
-        //options.index = path.join('..', '..', options.index);
 
         grunt.verbose.writeflags(options, 'Options');
 
