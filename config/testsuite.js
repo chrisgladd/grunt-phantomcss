@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 /**
  * Start the webserver
  */
@@ -25,7 +27,7 @@ var args = JSON.parse(phantom.args);
 /**
  * Initialise CasperJs
  */
-phantom.casperPath = 'CasperJs';
+phantom.casperPath = fs.workingDirectory+'/CasperJs';
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 phantom.injectJs('jquery.js');
 

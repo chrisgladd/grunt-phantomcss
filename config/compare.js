@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 /**
  * Arguments passed in from the grunt task
  */
@@ -7,7 +9,7 @@ var args = JSON.parse(phantom.args);
 /**
  * Initialise CasperJs
  */
-phantom.casperPath = 'CasperJs';
+phantom.casperPath = fs.workingDirectory+'/CasperJs';
 phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
 phantom.injectJs('jquery.js');
 
