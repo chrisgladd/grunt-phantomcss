@@ -22,7 +22,6 @@ module.exports = function(grunt){
         //Configure via configFile
         else if(!options.configFile){
             options.configFile = 'config/testsuite.js';
-            options.configFile = path.resolve(options.configFile);
         }
 
         if(!options.screenshots){
@@ -32,6 +31,7 @@ module.exports = function(grunt){
             options.failures = 'failures';
         }
 
+        options.configFile = path.resolve(options.configFile);
         options.screenshots = path.resolve(options.screenshots);
         options.failures = path.resolve(options.failures);
         if(options.index){
