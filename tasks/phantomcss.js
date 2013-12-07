@@ -30,7 +30,6 @@ module.exports = function(grunt){
         });
 
         var dest = path.resolve(options.results);
-        var screenshotDest = path.join(dest, 'screenshots/');
         var cwd = path.join(__dirname, '..', 'bower_components', 'phantomcss');
         var phantomBinary = path.join(__dirname, '..', 'node_modules', 'phantomjs', 'bin', 'phantomjs');
         var runnerLocation = path.join(__dirname, '..', 'config/runner.js');
@@ -67,11 +66,11 @@ module.exports = function(grunt){
             var allScreenshots = grunt.file.expand(path.join(options.screenshots, '**.png'));
 
             // Create the output directory
-            grunt.file.mkdir(screenshotDest);
+            grunt.file.mkdir(dest);
 
             // Copy fixtures, diffs, and failure images to the results directory
             allScreenshots.forEach(function(filepath){
-                grunt.file.copy(filepath, path.join(screenshotDest, path.basename(filepath)));
+                grunt.file.copy(filepath, path.join(dest, path.basename(filepath)));
             });
 
             deleteDiffScreenshots();

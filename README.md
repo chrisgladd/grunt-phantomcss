@@ -41,17 +41,29 @@ grunt.initConfig({
 
 ### Options
 
+#### src
+Type: `String|Array`
+
+The test files to run.
+
 #### options.screenshots
-Type: `String`
+Type: `String`  
 Default value: `'./screenshots'`
 
 The screenshots directory where test fixtures (comparison screenshots) are stored. Baseline screenshots will be stored here on the first run if they're not present.
 
 #### options.results
-Type: `String`
+Type: `String`  
 Default value: `'./results'`
 
-The directory to store test results. A `screenshots` subdirectory will be created to hold results.
+The directory to store source, diff, and failure screenshots after tests.
+
+#### options.viewportSize
+Type: `Array`  
+Default value: `[1280, 800]`
+
+The viewport size to test the site in `[width, height]` format. Useful when testing responsive layouts. 
+
 
 ### Usage Examples
 
@@ -62,8 +74,9 @@ In this example the test suite is run and and the
 grunt.initConfig({
   phantomcss: {
     options: {
-      source: 'test/visual/screenshots/',
-      dest: 'results/visual/'
+      screenshots: 'test/visual/screenshots/',
+      results: 'results/visual/',
+      viewportSize: [1024, 768]
     },
     src: [
       'test/visual/**/*.js'
