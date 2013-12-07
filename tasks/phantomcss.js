@@ -41,7 +41,7 @@ module.exports = function(grunt){
         grunt.verbose.writeflags(options, 'Options');
 
         var cwd = path.join(__dirname, '..', 'bower_components', 'phantomcss');
-        var phantomBinary = path.join(__dirname, '..', '..', 'phantomjs', 'bin', 'phantomjs');
+        var phantomBinary = path.join(__dirname, '..', 'node_modules', 'phantomjs', 'bin', 'phantomjs');
 
         grunt.util.spawn({
             "cmd": phantomBinary,
