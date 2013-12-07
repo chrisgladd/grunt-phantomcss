@@ -1,6 +1,6 @@
 # grunt-phantomcss
 
-> Plugin to do CSS regression testing via PhantomCSS. Currently the only configuration is allowed via a config file that will be passed to PhantomCSS.
+> Automate CSS regression testing with PhantomCSS
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
@@ -48,40 +48,69 @@ The test files to run.
 
 #### options.screenshots
 Type: `String`  
-Default value: `'./screenshots'`
+Default: `'./screenshots'`
 
 The screenshots directory where test fixtures (comparison screenshots) are stored. Baseline screenshots will be stored here on the first run if they're not present.
 
 #### options.results
 Type: `String`  
-Default value: `'./results'`
+Default: `'./results'`
 
 The directory to store source, diff, and failure screenshots after tests.
 
 #### options.viewportSize
 Type: `Array`  
-Default value: `[1280, 800]`
+Default: `[1280, 800]`
 
 The viewport size to test the site in `[width, height]` format. Useful when testing responsive layouts. 
 
 
 ### Usage Examples
 
-#### Default Options
-In this example the test suite is run and and the 
+#### Basic visual tests
+Run tests in `test/visual/` against comparison screenshots stored in `test/visual/screenshots/`, and put the resulting screenshots in `results/visual/`
 
 ```js
 grunt.initConfig({
   phantomcss: {
     options: {
       screenshots: 'test/visual/screenshots/',
-      results: 'results/visual/',
-      viewportSize: [1024, 768]
+      results: 'results/visual/'
     },
     src: [
       'test/visual/**/*.js'
     ]
   }
+});
+```
+
+#### Responsive layout testing
+Run tests in `test/visual/` against comparison screenshots for destop and mobile.
+
+```js
+grunt.initConfig({
+  phantomcss: {
+    desktop: {
+      options: {
+        screenshots: 'test/visual/desktop/',
+        results: 'results/visual/desktop',
+        viewportSize: [1024, 768]
+      },
+      src: [
+        'test/visual/**.js'
+      ]
+    },
+    mobile: {
+      options: {
+        screenshots: 'test/visual/mobile/',
+        results: 'results/visual/mobile',
+        viewportSize: [320, 480]
+      },
+      src: [
+        'test/visual/**.js'
+      ]
+    }
+  },
 });
 ```
 
