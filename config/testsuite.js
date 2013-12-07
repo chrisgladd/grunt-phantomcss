@@ -42,19 +42,27 @@ var phantomcss = require('./phantomcss.js');
 var url = startServer(args.index || 'demo/coffeemachine.html');
 
 phantomcss.init({
-	screenshotRoot: args.screenshots || './screenshots',
-	failedComparisonsRoot: args.failures || './screenshots',
+    screenshotRoot: args.screenshots || './screenshots',
+    failedComparisonsRoot: args.failures || './screenshots',
 
-    onFail: function(test){ console.log(test.filename, test.mismatch); },
-    onPass: function(test){ console.log(test.filename); },
-    onTimeout: function(test){ console.log(test.filename); },
+    onFail: function(test){
+        console.log('Failed: '+test.filename+' by a factor of '+test.mismatch);
+    },
+    onPass: function(test){
+        console.log('Passed: '+test.filename);
+    },
+    onTimeout: function(test){
+        console.log('Timeout: '+test.filename);
+    },
     onComplete: function(allTests, noOfFails, noOfErrors){
-        if(noOfFails + noOfErrors > 0){
-            console.log("There were " + noOfFails + " failures, and " + noOfErrors + " errors");
+        var totalFailures = noOfFails + noOfErrors;
+        var noOfPasses = allTests.length - totalFailures;
+        console.log('Passed: '+ noOfPasses);
+        if (totalFailures > 0) {
+            console.log('Failed: '+ noOfFails);
+            console.log('Errors: '+ noOfErrors);
+            phantom.exit(1);
         }
-        allTests.forEach(function(test){
-            if(test.fail){ console.log(test.filename, test.mismatch); }
-        });
     }
 });
 
