@@ -10,12 +10,11 @@
 var path = require('path');
 
 module.exports = function(grunt){
-    var desc = 'CSS Regression Testing';
-    grunt.registerMultiTask('phantomcss', desc, function(){
+    grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function(){
         function deleteDiffScreenshots(){
             var diffScreenshots = grunt.file.expand([
-                path.join(options.screenshots, '**diff.png'),
-                path.join(options.screenshots, '**fail.png')
+                path.join(options.screenshots, '*diff.png'),
+                path.join(options.screenshots, '*fail.png')
             ]);
 
             // Delete diff files
@@ -44,8 +43,9 @@ module.exports = function(grunt){
 
         options.screenshots = path.resolve(options.screenshots);
 
-        // Failures are put in the same place as screenshots
-        // They'll be moved/deleted later
+        // Put failure screenshots in the same place as source screenshots
+        // We'll move/delete them after the test run
+        // Note: This duplicate assignment is provided for clarity; PhantomCSS will put failures in the screenshots folder by default
         options.failures = options.screenshots;
 
         grunt.verbose.writeflags(options, 'Options');
@@ -69,7 +69,7 @@ module.exports = function(grunt){
             // Create the output directory
             grunt.file.mkdir(screenshotDest);
 
-            // Copy results
+            // Copy fixtures, diffs, and failure images to the results directory
             allScreenshots.forEach(function(filepath){
                 grunt.file.copy(filepath, path.join(screenshotDest, path.basename(filepath)));
             });
