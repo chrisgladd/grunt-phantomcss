@@ -28,44 +28,30 @@ grunt.initConfig({
     options: {},
     your_target: {
       options: {
-          configFile: 'config/testsuite.js'
-      }
-    },
-  },
-})
+        screenshots: 'test/visual/screenshots/',
+        results: 'results/visual/'
+      },
+      src: [
+        'test/visual/**/*.js'
+      ]
+    }
+  }
+});
 ```
 
 ### Options
-
-#### options.configFile
-Type: `String`
-Default value: `'config/testsuite.js'`
-
-The configuration file to pass into PhantomCSS
 
 #### options.screenshots
 Type: `String`
 Default value: `'./screenshots'`
 
-The screenshots directory to store successful screenshots.
+The screenshots directory where test fixtures (comparison screenshots) are stored. Baseline screenshots will be stored here on the first run if they're not present.
 
-#### options.failures
+#### options.results
 Type: `String`
-Default value: `'./failures'`
+Default value: `'./results'`
 
-The failures directory to store failed screenshots
-
-#### options.index
-Type: `String`
-Default value: `'demo/coffeemachine.html'`
-
-The index of the website for the simple webserver to get when started.
-
-#### options.server
-Type: `String`
-Default value: `'http://localhost:8080/index.html'`
-
-The url of an already running server and the initial resource to fetch. This will override the `index` option above and will use the external server to run the tests.
+The directory to store test results. A `screenshots` subdirectory will be created to hold results.
 
 ### Usage Examples
 
@@ -76,11 +62,16 @@ In this example the test suite is run and and the
 grunt.initConfig({
   phantomcss: {
     options: {
-    	configFile: 'config/testsuite.js'
+      source: 'test/visual/screenshots/',
+      dest: 'results/visual/'
     },
-  },
-})
+    src: [
+      'test/visual/**/*.js'
+    ]
+  }
+});
 ```
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
