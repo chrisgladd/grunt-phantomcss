@@ -12,7 +12,7 @@ if (args.viewportSize) {
     viewportSize = {
         width: args.viewportSize[0],
         height: args.viewportSize[1]
-    }
+    };
 }
 
 // Initialise CasperJs
