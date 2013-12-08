@@ -8,30 +8,138 @@
 'use strict';
 
 var path = require('path');
+var tmp = require('temporary');
+var phantomBinaryPath = require('phantomjs').path;
+var runnerLocation = path.join(__dirname, '..', 'phantomjs/runner.js');
 
-module.exports = function(grunt){
-    grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function(){
-        function deleteDiffScreenshots(){
+module.exports = function(grunt) {
+    grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
+        var done = this.async();
+
+        var options = this.options({
+            screenshots: 'screenshots',
+            results: 'results',
+            viewportSize: [1280, 800],
+            logLevel: 'error'
+        });
+
+        // Timeout ID for message checking loop
+        var messageCheckTimeout;
+
+        // The number of tempfile lines already read
+        var lastLine = 0;
+
+        // The number of failed tests
+        var failureCount = 0;
+
+        // This is effectively the project root (location of Gruntfile)
+        // This allows relative paths in tests, i.e. casper.start('someLocalFile.html')
+        var cwd = process.cwd();
+
+        // Create a temporary file for message passing between the task and PhantomJS
+        var tempFile = new tmp.File();
+
+        var deleteDiffScreenshots = function() {
+            // Find diff/fail files
             var diffScreenshots = grunt.file.expand([
                 path.join(options.screenshots, '*diff.png'),
                 path.join(options.screenshots, '*fail.png')
             ]);
 
-            // Delete diff files
-            diffScreenshots.forEach(function(filepath){
+            // Delete all of 'em
+            diffScreenshots.forEach(function(filepath) {
                 grunt.file.delete(filepath);
             });
         }
 
-        var done = this.async();
-        var options = this.options({
-            screenshots: 'screenshots',
-            results: 'results'
-        });
+        var cleanup = function(error) {
+            // Remove temporary file
+            tempFile.unlink();
 
-        var resultsDirectory = path.resolve(options.results);
-        var phantomBinary = path.join(__dirname, '..', 'node_modules', 'phantomjs', 'bin', 'phantomjs');
-        var runnerLocation = path.join(__dirname, '..', 'config/runner.js');
+            // Create the output directory
+            grunt.file.mkdir(options.results);
+
+            // Copy fixtures, diffs, and failure images to the results directory
+            var allScreenshots = grunt.file.expand(path.join(options.screenshots, '**.png'));
+            allScreenshots.forEach(function(filepath) {
+                grunt.file.copy(filepath, path.join(options.results, path.basename(filepath)));
+            });
+
+            deleteDiffScreenshots();
+
+            done(error || failureCount === 0);
+        };
+
+        var checkForMessages = function checkForMessages(stopChecking) {
+            // Disable logging temporarily
+            grunt.log.muted = true;
+
+            // Read the file, splitting lines on \n, and removing a trailing line
+            var lines = grunt.file.read(tempFile.path).split('\n').slice(0, -1);
+
+            // Re-enable logging
+            grunt.log.muted = false;
+
+            // Iterate over all lines that haven't already been processed
+            lines.slice(lastLine).some(function(line) {
+                // Get args and method
+                var args = JSON.parse(line);
+                var eventName = args[0];
+
+                // Debugging messages
+                grunt.log.debug(JSON.stringify(['phantomjs'].concat(args)).magenta);
+
+                // Call handler
+                if (messageHandlers[eventName]) {
+                    messageHandlers[eventName].apply(null, args.slice(1));
+                }
+            });
+
+            // Update lastLine so previously processed lines are ignored
+            lastLine = lines.length;
+
+            if (stopChecking) {
+                clearTimeout(messageCheckTimeout);
+            }
+            else {
+                // Check back in a little bit
+                messageCheckTimeout = setTimeout(checkForMessages, 100);
+            }
+        };
+
+        var messageHandlers = {
+            onFail: function(test) {
+                grunt.log.writeln('Visual change found for ' + path.basename(test.filename) + ' (' + test.mismatch + '% mismatch)');
+            },
+            onPass: function(test) {
+                grunt.log.writeln('No changes found for ' + path.basename(test.filename));
+            },
+            onTimeout: function(test) {
+                grunt.log.writeln('Timeout whilte processing ' + path.basename(test.filename));
+            },
+            onComplete: function(allTests, noOfFails, noOfErrors) {
+                if (allTests.length) {
+                    var noOfPasses = allTests.length - failureCount;
+                    failureCount = noOfFails + noOfErrors;
+
+                    if (failureCount === 0) {
+                        grunt.log.ok('All ' + noOfPasses + ' tests passed!');
+                    }
+                    else {
+                        if (noOfErrors === 0) {
+                            grunt.log.error(noOfFails + ' tests failed.');
+                        }
+                        else {
+                            grunt.log.error(noOfFails + ' tests failed, ' + noOfErrors + ' had errors.');
+                        }
+                    }
+                }
+                else {
+                    grunt.log.ok('Baseline screenshots generated in '+args.screenshots+'.');
+                    grunt.log.warn('Check that the generated screenshots are visually correct and delete them if they aren\'t.');
+                }
+            }
+        };
 
         // Resolve paths for tests
         options.test = [];
@@ -41,22 +149,20 @@ module.exports = function(grunt){
 
         options.screenshots = path.resolve(options.screenshots);
 
-        // Put failure screenshots in the same place as source screenshots
-        // We'll move/delete them after the test run
+        // Put failure screenshots in the same place as source screenshots, we'll move/delete them after the test run
         // Note: This duplicate assignment is provided for clarity; PhantomCSS will put failures in the screenshots folder by default
         options.failures = options.screenshots;
 
-        grunt.verbose.writeflags(options, 'Options');
+        options.tempFile = tempFile.path;
 
         // Remove old diff screenshots
         deleteDiffScreenshots();
 
-        // Effectively the project root (location of Gruntfile)
-        // This allows relative paths in tests, i.e. casper.start('someLocalFile.html')
-        var cwd = process.cwd();
+        // Start watching for messages
+        checkForMessages();
 
         grunt.util.spawn({
-            cmd: phantomBinary,
+            cmd: phantomBinaryPath,
             args: [
                 runnerLocation,
                 JSON.stringify(options)
@@ -65,25 +171,11 @@ module.exports = function(grunt){
                 cwd: cwd,
                 stdio: 'inherit'
             }
-        }, function(error, result, code){
-            var allScreenshots = grunt.file.expand(path.join(options.screenshots, '**.png'));
+        }, function(error, result, code) {
+            // When Phantom exits check for remaining messages one last time
+            checkForMessages(true);
 
-            // Create the output directory
-            grunt.file.mkdir(resultsDirectory);
-
-            // Copy fixtures, diffs, and failure images to the results directory
-            allScreenshots.forEach(function(filepath){
-                grunt.file.copy(filepath, path.join(resultsDirectory, path.basename(filepath)));
-            });
-
-            deleteDiffScreenshots();
-
-            if(error) {
-                done(false);
-            }
-            else {
-                done();
-            }
+            cleanup(error);
         });
     });
 };
