@@ -36,10 +36,10 @@
   },
   "dependencies": {
     "bower": "~1.0.3",
-    "phantomjs": "~1.9.2-2",
     "temporary": "0.0.7"
   },
   "peerDependencies": {
+    "phantomjs": "~1.9.2-2",
     "grunt": "~0.4.1"
   },
   "keywords": [
