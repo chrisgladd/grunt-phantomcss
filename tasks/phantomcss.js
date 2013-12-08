@@ -10,7 +10,8 @@
 var path = require('path');
 var tmp = require('temporary');
 var phantomBinaryPath = require('phantomjs').path;
-var runnerLocation = path.join(__dirname, '..', 'phantomjs/runner.js');
+var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
+var phantomCSSPath = path.join(__dirname, '..', 'bower_components', 'phantomcss');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
@@ -50,7 +51,7 @@ module.exports = function(grunt) {
             diffScreenshots.forEach(function(filepath) {
                 grunt.file.delete(filepath);
             });
-        }
+        };
 
         var cleanup = function(error) {
             // Remove temporary file
@@ -135,7 +136,7 @@ module.exports = function(grunt) {
                     }
                 }
                 else {
-                    grunt.log.ok('Baseline screenshots generated in '+args.screenshots+'.');
+                    grunt.log.ok('Baseline screenshots generated in '+options.screenshots);
                     grunt.log.warn('Check that the generated screenshots are visually correct and delete them if they aren\'t.');
                 }
             }
@@ -153,7 +154,9 @@ module.exports = function(grunt) {
         // Note: This duplicate assignment is provided for clarity; PhantomCSS will put failures in the screenshots folder by default
         options.failures = options.screenshots;
 
+        // Pass necessary paths
         options.tempFile = tempFile.path;
+        options.phantomCSSPath = phantomCSSPath;
 
         // Remove old diff screenshots
         deleteDiffScreenshots();
@@ -164,7 +167,7 @@ module.exports = function(grunt) {
         grunt.util.spawn({
             cmd: phantomBinaryPath,
             args: [
-                runnerLocation,
+                runnerPath,
                 JSON.stringify(options)
             ],
             opts: {

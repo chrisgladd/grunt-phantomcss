@@ -15,7 +15,7 @@ var sendMessage = function() {
 };
 
 // Initialise CasperJs
-var phantomCSSPath = fs.workingDirectory+s+'node_modules'+s+'grunt-phantomcss'+s+'bower_components'+s+'phantomcss';
+var phantomCSSPath = args.phantomCSSPath;
 phantom.casperPath = phantomCSSPath+s+'CasperJs';
 phantom.injectJs(phantom.casperPath+s+'bin'+s+'bootstrap.js');
 
