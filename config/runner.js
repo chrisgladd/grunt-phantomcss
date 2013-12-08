@@ -1,4 +1,5 @@
 var fs = require('fs');
+var s = fs.separator;
 
 // Parse arguments passed in from the grunt task
 var args = JSON.parse(phantom.args);
@@ -16,37 +17,46 @@ if (args.viewportSize) {
 }
 
 // Initialise CasperJs
-phantom.casperPath = fs.workingDirectory+'/CasperJs';
-phantom.injectJs(phantom.casperPath + '/bin/bootstrap.js');
+var phantomCSSPath = fs.workingDirectory+s+'node_modules'+s+'grunt-phantomcss'+s+'bower_components'+s+'phantomcss';
+phantom.casperPath = phantomCSSPath+s+'CasperJs';
+phantom.injectJs(phantom.casperPath+s+'bin'+s+'bootstrap.js');
 
 var casper = require('casper').create({
-    viewportSize: viewportSize
+    viewportSize: viewportSize,
+    logLevel: args.logLevel || 'error',
+    verbose: true
 });
 
 // Require and initialise PhantomCSS module
-var phantomcss = require('./phantomcss.js');
+var phantomcss = require(phantomCSSPath+s+'phantomcss.js');
 
+var exitStatus = 0;
 phantomcss.init({
     screenshotRoot: args.screenshots,
     failedComparisonsRoot: args.failures,
+    libraryRoot: phantomCSSPath+s+'ResembleJs', // Give absolute path, otherwise PhantomCSS fails
 
     onFail: function(test){
-        console.log('Failed: '+test.filename+' by a factor of '+test.mismatch);
+        console.error('Visual change found for screenshot ' + test.filename + ' (' + test.mismatch + '% mismatch)');
     },
     onPass: function(test){
-        console.log('Passed: '+test.filename);
+        console.log('No changes found for screenshot ' + test.filename);
     },
     onTimeout: function(test){
-        console.log('Timeout: '+test.filename);
+        console.error('Could not complete image comparison for ' + test.filename);
     },
     onComplete: function(allTests, noOfFails, noOfErrors){
+        if (!allTests.length) {
+            console.log('Baseline screenshots generated in '+args.screenshots+'. Delete them if they are wrong.')
+        }
+
         var totalFailures = noOfFails + noOfErrors;
         var noOfPasses = allTests.length - totalFailures;
         console.log('Passed: '+ noOfPasses);
         if (totalFailures > 0) {
             console.log('Failed: '+ noOfFails);
             console.log('Errors: '+ noOfErrors);
-            phantom.exit(1);
+            exitStatus = totalFailures;
         }
     }
 });
@@ -57,9 +67,12 @@ args.test.forEach(function(testSuite) {
 });
 
 // End tests and compare screenshots
-casper.then(function() {
+casper.then(function(){
     phantomcss.compareAll();
-}).
-run(function() {
-    phantom.exit(phantomcss.getExitStatus());
+})
+.then(function(){
+    casper.test.done();
+})
+.run(function(){
+    phantom.exit(exitStatus);
 });

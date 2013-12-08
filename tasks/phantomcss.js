@@ -29,8 +29,7 @@ module.exports = function(grunt){
             results: 'results'
         });
 
-        var dest = path.resolve(options.results);
-        var cwd = path.join(__dirname, '..', 'bower_components', 'phantomcss');
+        var resultsDirectory = path.resolve(options.results);
         var phantomBinary = path.join(__dirname, '..', 'node_modules', 'phantomjs', 'bin', 'phantomjs');
         var runnerLocation = path.join(__dirname, '..', 'config/runner.js');
 
@@ -52,6 +51,10 @@ module.exports = function(grunt){
         // Remove old diff screenshots
         deleteDiffScreenshots();
 
+        // Effectively the project root (location of Gruntfile)
+        // This allows relative paths in tests, i.e. casper.start('someLocalFile.html')
+        var cwd = process.cwd();
+
         grunt.util.spawn({
             cmd: phantomBinary,
             args: [
@@ -66,11 +69,11 @@ module.exports = function(grunt){
             var allScreenshots = grunt.file.expand(path.join(options.screenshots, '**.png'));
 
             // Create the output directory
-            grunt.file.mkdir(dest);
+            grunt.file.mkdir(resultsDirectory);
 
             // Copy fixtures, diffs, and failure images to the results directory
             allScreenshots.forEach(function(filepath){
-                grunt.file.copy(filepath, path.join(dest, path.basename(filepath)));
+                grunt.file.copy(filepath, path.join(resultsDirectory, path.basename(filepath)));
             });
 
             deleteDiffScreenshots();

@@ -64,6 +64,12 @@ Default: `[1280, 800]`
 
 The viewport size to test the site in `[width, height]` format. Useful when testing responsive layouts. 
 
+#### options.logLevel
+Type: `String`  
+Default: `error`
+
+The CasperJS log level. See [CasperJS: Logging](http://casperjs.readthedocs.org/en/latest/logging.html) for details.
+
 
 ### Usage Examples
 
@@ -113,6 +119,44 @@ grunt.initConfig({
   },
 });
 ```
+
+#### Sample test file
+
+Test files should do the following:
+* Start CasperJS with the URL you want to test
+* Manipulate the page in some way
+* Take screenshots
+
+```javascript
+casper.start('http://localhost:3000/')
+.then(function() {
+  phantomcss.screenshot('#todo-app', 'Main app');
+})
+.then(function() {
+  casper.fill('form.todo-form', {
+    todo: 'Item1'
+  }, true);
+
+  phantomcss.screenshot('#todo-app', 'Item added');
+})
+.then(function() {
+  casper.click('.todo-done');
+
+  phantomcss.screenshot('#todo-app', 'Item checked off');
+});
+```
+
+You can also load a local file by specifying a path (relative to the Gruntfile):
+
+```javascript
+casper.start('build/client/index.html')
+.then(function() {
+  // ...
+});
+```
+
+See the [CasperJS documentation](http://casperjs.readthedocs.org/en/latest/modules/casper.html) and the [PhantomCSS documentation](https://github.com/Huddle/PhantomCSS) for more information on using CasperJS and PhantomCSS.
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
