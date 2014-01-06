@@ -1,6 +1,6 @@
 # grunt-phantomcss
 
-> Plugin to do CSS regression testing via PhantomCSS. Currently the only configuration is allowed via a config file that will be passed to PhantomCSS.
+> Automate CSS regression testing with PhantomCSS
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
@@ -28,59 +28,136 @@ grunt.initConfig({
     options: {},
     your_target: {
       options: {
-          configFile: 'config/testsuite.js'
-      }
-    },
-  },
-})
+        screenshots: 'test/visual/screenshots/',
+        results: 'results/visual/'
+      },
+      src: [
+        'test/visual/**/*.js'
+      ]
+    }
+  }
+});
 ```
 
 ### Options
 
-#### options.configFile
-Type: `String`
-Default value: `'config/testsuite.js'`
+#### src
+Type: `String|Array`
 
-The configuration file to pass into PhantomCSS
+The test files to run.
 
 #### options.screenshots
-Type: `String`
-Default value: `'./screenshots'`
+Type: `String`  
+Default: `'./screenshots'`
 
-The screenshots directory to store successful screenshots.
+The screenshots directory where test fixtures (comparison screenshots) are stored. Baseline screenshots will be stored here on the first run if they're not present.
 
-#### options.failures
-Type: `String`
-Default value: `'./failures'`
+#### options.results
+Type: `String`  
+Default: `'./results'`
 
-The failures directory to store failed screenshots
+The directory to store source, diff, and failure screenshots after tests.
 
-#### options.index
-Type: `String`
-Default value: `'demo/coffeemachine.html'`
+#### options.viewportSize
+Type: `Array`  
+Default: `[1280, 800]`
 
-The index of the website for the simple webserver to get when started.
+The viewport size to test the site in `[width, height]` format. Useful when testing responsive layouts. 
 
-#### options.server
-Type: `String`
-Default value: `'http://localhost:8080/index.html'`
+#### options.logLevel
+Type: `String`  
+Default: `error`
 
-The url of an already running server and the initial resource to fetch. This will override the `index` option above and will use the external server to run the tests.
+The CasperJS log level. See [CasperJS: Logging](http://casperjs.readthedocs.org/en/latest/logging.html) for details.
+
 
 ### Usage Examples
 
-#### Default Options
-In this example the test suite is run and and the 
+#### Basic visual tests
+Run tests in `test/visual/` against comparison screenshots stored in `test/visual/screenshots/`, and put the resulting screenshots in `results/visual/`
 
 ```js
 grunt.initConfig({
   phantomcss: {
     options: {
-    	configFile: 'config/testsuite.js'
+      screenshots: 'test/visual/screenshots/',
+      results: 'results/visual/'
     },
-  },
-})
+    src: [
+      'test/visual/**/*.js'
+    ]
+  }
+});
 ```
+
+#### Responsive layout testing
+Run tests in `test/visual/` against comparison screenshots for destop and mobile.
+
+```js
+grunt.initConfig({
+  phantomcss: {
+    desktop: {
+      options: {
+        screenshots: 'test/visual/desktop/',
+        results: 'results/visual/desktop',
+        viewportSize: [1024, 768]
+      },
+      src: [
+        'test/visual/**.js'
+      ]
+    },
+    mobile: {
+      options: {
+        screenshots: 'test/visual/mobile/',
+        results: 'results/visual/mobile',
+        viewportSize: [320, 480]
+      },
+      src: [
+        'test/visual/**.js'
+      ]
+    }
+  },
+});
+```
+
+#### Sample test file
+
+Test files should do the following:
+* Start CasperJS with the URL you want to test
+* Manipulate the page in some way
+* Take screenshots
+
+```javascript
+casper.start('http://localhost:3000/')
+.then(function() {
+  phantomcss.screenshot('#todo-app', 'Main app');
+})
+.then(function() {
+  casper.fill('form.todo-form', {
+    todo: 'Item1'
+  }, true);
+
+  phantomcss.screenshot('#todo-app', 'Item added');
+})
+.then(function() {
+  casper.click('.todo-done');
+
+  phantomcss.screenshot('#todo-app', 'Item checked off');
+});
+```
+
+You can also load a local file by specifying a path (relative to the Gruntfile):
+
+```javascript
+casper.start('build/client/index.html')
+.then(function() {
+  // ...
+});
+```
+
+See the [CasperJS documentation](http://casperjs.readthedocs.org/en/latest/modules/casper.html) and the [PhantomCSS documentation](https://github.com/Huddle/PhantomCSS) for more information on using CasperJS and PhantomCSS.
+
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 

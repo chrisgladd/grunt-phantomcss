@@ -14,7 +14,7 @@ module.exports = function(grunt) {
             all: [
                 'Gruntfile.js',
                 'tasks/phantomcss.js',
-                'config/testsuite.js',
+                'phantomjs/runner.js',
                 '<%= nodeunit.tests %>',
             ],
             options: {
@@ -26,25 +26,20 @@ module.exports = function(grunt) {
         // previously-created files.
         clean: {
             tests: ['tmp'],
-            screenshots: ['screenshots','failures'],
+            results: ['results'],
         },
 
         // Configuration to be run (and then tested).
         phantomcss: {
-            default_options: {
+            visualTest: {
                 options: {
-                    configFile: "config/testsuite.js",
-                    screenshots: "test/screenshots",
-                    failures: "failures",
-                    index: "test/coffeemachine.html"
+                    screenshots: 'fixtures/screenshots/',
+                    results: 'results/'
                 },
-            },
-            compare_only: {
-                options: {
-                    screenshots: "screenshots",
-                    failures: "failures"
-                },
-            },
+                src: [
+                    'fixtures/coffeemachine_test.js'
+                ]
+            }
         },
 
         // Unit tests.

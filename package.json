@@ -25,7 +25,8 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "postinstall": "node ./node_modules/bower/bin/bower install"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
@@ -33,11 +34,21 @@
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt": "~0.4.1"
   },
+  "dependencies": {
+    "bower": "~1.0.3",
+    "temporary": "0.0.7"
+  },
   "peerDependencies": {
-    "grunt": "~0.4.1",
-    "phantomjs": "~1.9.2-2"
+    "phantomjs": "~1.9.2-2",
+    "grunt": "~0.4.1"
   },
   "keywords": [
-    "gruntplugin", "phantomcss", "css", "regression", "test", "phantomjs", "grunt"
+    "gruntplugin",
+    "phantomcss",
+    "css",
+    "regression",
+    "test",
+    "phantomjs",
+    "grunt"
   ]
 }
