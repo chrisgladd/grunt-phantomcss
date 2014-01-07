@@ -1,9 +1,10 @@
 {
   "name": "grunt-phantomcss",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/chrisgladd/grunt-phantomcss",
   "authors": [
-    "Chris Gladd <chris.m.gladd@gmail.com>"
+    "Chris Gladd <chris.m.gladd@gmail.com>",
+    "Larry Davis <lazd@lazd.net>"
   ],
   "description": "A grunt task for phantomcss",
   "keywords": [

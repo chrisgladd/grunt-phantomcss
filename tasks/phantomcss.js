@@ -116,7 +116,7 @@ module.exports = function(grunt) {
                 grunt.log.writeln('No changes found for ' + path.basename(test.filename));
             },
             onTimeout: function(test) {
-                grunt.log.writeln('Timeout whilte processing ' + path.basename(test.filename));
+                grunt.log.writeln('Timeout while processing ' + path.basename(test.filename));
             },
             onComplete: function(allTests, noOfFails, noOfErrors) {
                 if (allTests.length) {
