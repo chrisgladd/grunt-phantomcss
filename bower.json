@@ -27,6 +27,6 @@
     "tests"
   ],
   "dependencies": {
-    "phantomcss": "*"
+    "phantomcss": "f0846511d9e1e55aa160aaab84e2a150bd3a5a41"
   }
 }
