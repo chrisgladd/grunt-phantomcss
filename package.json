@@ -1,7 +1,7 @@
 {
   "name": "grunt-phantomcss",
   "description": "Plugin to do CSS regression testing via PhantomCSS.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "homepage": "https://github.com/chrisgladd/grunt-phantomcss",
   "author": {
     "name": "Chris Gladd",
