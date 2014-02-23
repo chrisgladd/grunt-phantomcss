@@ -181,7 +181,7 @@ casper.then(function() {
   phantomcss.screenshot('#todo-app', 'Item checked off');
 });
 ```
-You can also use ```casper.thenOpen``` to load a new url and continue testing in subsequent files instead of casper.start.
+You can also use ```casper.thenOpen``` to load a new url and continue testing in subsequent files instead of ```casper.start```.
 
 
 See the [CasperJS documentation](http://casperjs.readthedocs.org/en/latest/modules/casper.html) and the [PhantomCSS documentation](https://github.com/Huddle/PhantomCSS) for more information on using CasperJS and PhantomCSS.
@@ -191,6 +191,8 @@ See the [CasperJS documentation](http://casperjs.readthedocs.org/en/latest/modul
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+* 2014-02-23   v0.2.2   Added multiple file example to README.md
+* 2014-02-07   v0.2.1   Fixed ResembleJS path issue
 * 2014-01-07   v0.2.0   Merged updates from Larry Davis
 * 2013-10-24   v0.1.1   Added the ability to use an external server
 * 2013-10-24   v0.1.0   Initial Release
