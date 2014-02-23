@@ -155,6 +155,35 @@ casper.start('build/client/index.html')
 });
 ```
 
+### Multiple Test Files
+Your first test file should use ```casper.start```
+
+```javascript
+casper.start('http://localhost:3000/')
+.then(function() {
+  phantomcss.screenshot('#todo-app', 'Main app');
+})
+.then(function() {
+  casper.fill('form.todo-form', {
+    todo: 'Item1'
+  }, true);
+
+  phantomcss.screenshot('#todo-app', 'Item added');
+});
+
+```
+Subsequent files should call ```casper.then``` to continue the previous test.
+
+```javascript
+casper.then(function() {
+  casper.click('.todo-done');
+
+  phantomcss.screenshot('#todo-app', 'Item checked off');
+});
+```
+You can also use ```casper.thenOpen``` to load a new url and continue testing in subsequent files instead of casper.start.
+
+
 See the [CasperJS documentation](http://casperjs.readthedocs.org/en/latest/modules/casper.html) and the [PhantomCSS documentation](https://github.com/Huddle/PhantomCSS) for more information on using CasperJS and PhantomCSS.
 
 
