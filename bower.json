@@ -27,6 +27,8 @@
     "tests"
   ],
   "dependencies": {
-    "phantomcss": "f0846511d9e1e55aa160aaab84e2a150bd3a5a41"
-  }
+    "phantomcss": "f0846511d9e1e55aa160aaab84e2a150bd3a5a41",
+    "tmp": "0.0.23",
+    "bower": "1.3.6"
+  },
 }
