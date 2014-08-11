@@ -1,4 +1,4 @@
-# grunt-phantomcss
+# grunt-phantomcss [![Build Status](https://travis-ci.org/chrisgladd/grunt-phantomcss.png?branch=master)](https://travis-ci.org/chrisgladd/grunt-phantomcss)
 
 > Automate CSS regression testing with PhantomCSS
 
