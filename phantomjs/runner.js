@@ -30,6 +30,7 @@ var phantomCSSPath = args.phantomCSSPath;
 var phantomcss = require(phantomCSSPath+s+'phantomcss.js');
 
 phantomcss.init({
+    addLabelToFailedImage: args.addLabelToFailedImage,
     screenshotRoot: args.screenshots,
     comparisonResultRoot: args.failures,
     failedComparisonsRoot: false,

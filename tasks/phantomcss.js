@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         var done = this.async();
 
         var options = this.options({
+            addLabelToFailedImage: true,
             screenshots: 'screenshots',
             results: 'results',
             viewportSize: [1280, 800],
