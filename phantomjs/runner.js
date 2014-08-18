@@ -31,7 +31,8 @@ var phantomcss = require(phantomCSSPath+s+'phantomcss.js');
 
 phantomcss.init({
     screenshotRoot: args.screenshots,
-    failedComparisonsRoot: args.failures,
+    comparisonResultRoot: args.failures,
+    failedComparisonsRoot: false,
     libraryRoot: phantomCSSPath, // Give absolute path, otherwise PhantomCSS fails
 
     onFail: function(test) {

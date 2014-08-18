@@ -58,14 +58,6 @@ module.exports = function(grunt) {
             // Remove temporary file
             tempFile.unlink();
 
-            // Create the output directory
-            grunt.file.mkdir(options.results);
-
-            // Copy fixtures, diffs, and failure images to the results directory
-            var allScreenshots = grunt.file.expand(path.join(options.screenshots, '**.png'));
-            allScreenshots.forEach(function(filepath) {
-                grunt.file.copy(filepath, path.join(options.results, path.basename(filepath)));
-            });
 
             deleteDiffScreenshots();
 
@@ -150,10 +142,7 @@ module.exports = function(grunt) {
         });
 
         options.screenshots = path.resolve(options.screenshots);
-
-        // Put failure screenshots in the same place as source screenshots, we'll move/delete them after the test run
-        // Note: This duplicate assignment is provided for clarity; PhantomCSS will put failures in the screenshots folder by default
-        options.failures = options.screenshots;
+        options.failures = (options.results) ? path.resolve(options.results) : false;
 
         // Pass necessary paths
         options.tempFile = tempFile.path;
