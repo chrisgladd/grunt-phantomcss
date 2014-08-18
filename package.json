@@ -32,6 +32,7 @@
     "test": "grunt test"
   },
   "devDependencies": {
+    "casperjs": "^1.1.0-beta3",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",
     "grunt-contrib-nodeunit": "~0.2.0",
@@ -39,7 +40,7 @@
     "phantomjs": "~1.9.2-2"
   },
   "dependencies": {
-    "phantomcss": "^0.6.0",
+    "phantomcss": "^0.7.0",
     "temporary": "0.0.7"
   },
   "peerDependencies": {

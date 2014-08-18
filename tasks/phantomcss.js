@@ -12,6 +12,7 @@ var tmp = require('temporary');
 var phantomBinaryPath = require('phantomjs').path;
 var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
 var phantomCSSPath = path.join(__dirname, '..', 'node_modules', 'phantomcss');
+var casperJSPath = path.join(__dirname, '..', 'node_modules', 'casperjs');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
@@ -157,6 +158,7 @@ module.exports = function(grunt) {
         // Pass necessary paths
         options.tempFile = tempFile.path;
         options.phantomCSSPath = phantomCSSPath;
+        options.casperJSPath = casperJSPath;
 
         // Remove old diff screenshots
         deleteDiffScreenshots();
