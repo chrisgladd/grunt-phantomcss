@@ -20,6 +20,7 @@ module.exports = function(grunt) {
 
         var options = this.options({
             addLabelToFailedImage: true,
+            cleanupComparisonImages: true,
             screenshots: 'screenshots',
             results: 'results',
             viewportSize: [1280, 800],
@@ -59,8 +60,9 @@ module.exports = function(grunt) {
             // Remove temporary file
             tempFile.unlink();
 
-
-            deleteDiffScreenshots();
+            if (options.cleanupComparisonImages) {
+              deleteDiffScreenshots();
+            }
 
             done(error || failureCount === 0);
         };
