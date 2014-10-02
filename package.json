@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "bower": "~1.0.3",
-    "temporary": "0.0.7"
+    "temporary": "~0.0.8"
   },
   "peerDependencies": {
     "phantomjs": "~1.9.2-2",
