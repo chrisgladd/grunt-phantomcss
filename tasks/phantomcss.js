@@ -22,7 +22,7 @@ module.exports = function(grunt) {
             results: 'results',
             viewportSize: [1280, 800],
             logLevel: 'error',
-            mismatchTolerance: 0.05
+            mismatchTolerance: 1.00
         });
 
         // Timeout ID for message checking loop
