@@ -21,11 +21,7 @@ module.exports = function(grunt) {
             screenshots: 'screenshots',
             results: 'results',
             viewportSize: [1280, 800],
-            logLevel: 'error',
-            pageSettings: {
-              loadImages:  false
-            },
-            rebase: false
+            logLevel: 'error'
         });
 
         // Timeout ID for message checking loop
