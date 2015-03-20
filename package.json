@@ -29,7 +29,8 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "postinstall": "bower install"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
