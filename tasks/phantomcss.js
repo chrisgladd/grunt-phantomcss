@@ -165,21 +165,37 @@ module.exports = function(grunt) {
         // Start watching for messages
         checkForMessages();
 
-        grunt.util.spawn({
-            cmd: phantomBinaryPath,
-            args: [
-                runnerPath,
-                JSON.stringify(options)
-            ],
-            opts: {
-                cwd: cwd,
-                stdio: 'inherit'
-            }
-        }, function(error, result, code) {
-            // When Phantom exits check for remaining messages one last time
-            checkForMessages(true);
+        //FailSafe PhantomJS 
+        var complete = this.async(); 
+        var count = 0; 
+        var retry = function () { 
+          grunt.util.spawn({ 
+            cmd: phantomBinaryPath, 
+            args: [ 
+              runnerPath, 
+              JSON.stringify(options) 
+            ], 
+            opts: { 
+              cwd: cwd, 
+              stdio: 'inherit' 
+            } 
+          }, function (error, result, code) { 
+            count++; 
+            if (error && code === 1 /*error code thrown by when phantomjs fails*/) { 
+              if(count < 8) { 
+                grunt.log.writeln("Retrying phantomcss tests up to 7 times. Try: " + count); 
+                retry(); 
+              } else { 
+                checkForMessages(true); 
+                cleanup(error); 
+                complete(false); 
+              } 
+            } else { 
+              complete(result); 
+            } 
+          }); 
+        };
+        retry();
+    }); 
+}; 
 
-            cleanup(error);
-        });
-    });
-};
