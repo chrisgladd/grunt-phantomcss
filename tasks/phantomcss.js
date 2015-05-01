@@ -11,7 +11,7 @@ var path = require('path');
 var tmp = require('temporary');
 var phantomBinaryPath = require('phantomjs').path;
 var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
-var phantomCSSPath = path.join(__dirname, '..', 'bower_components', 'phantomcss');
+var phantomCSSPath = path.join(__dirname, '..', 'node_modules', 'phantomcss');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
@@ -21,7 +21,8 @@ module.exports = function(grunt) {
             screenshots: 'screenshots',
             results: 'results',
             viewportSize: [1280, 800],
-            logLevel: 'error'
+            logLevel: 'error',
+            mismatchTolerance: 1.00
         });
 
         // Timeout ID for message checking loop
@@ -164,21 +165,37 @@ module.exports = function(grunt) {
         // Start watching for messages
         checkForMessages();
 
-        grunt.util.spawn({
-            cmd: phantomBinaryPath,
-            args: [
-                runnerPath,
-                JSON.stringify(options)
-            ],
-            opts: {
-                cwd: cwd,
-                stdio: 'inherit'
-            }
-        }, function(error, result, code) {
-            // When Phantom exits check for remaining messages one last time
-            checkForMessages(true);
+        //FailSafe PhantomJS 
+        var complete = this.async(); 
+        var count = 0; 
+        var retry = function () { 
+          grunt.util.spawn({ 
+            cmd: phantomBinaryPath, 
+            args: [ 
+              runnerPath, 
+              JSON.stringify(options) 
+            ], 
+            opts: { 
+              cwd: cwd, 
+              stdio: 'inherit' 
+            } 
+          }, function (error, result, code) { 
+            count++; 
+            if (error && code === 1 /*error code thrown by when phantomjs fails*/) { 
+              if(count < 8) { 
+                grunt.log.writeln("Retrying phantomcss tests up to 7 times. Try: " + count); 
+                retry(); 
+              } else { 
+                checkForMessages(true); 
+                cleanup(error); 
+                complete(false); 
+              } 
+            } else { 
+              complete(result); 
+            } 
+          }); 
+        };
+        retry();
+    }); 
+}; 
 
-            cleanup(error);
-        });
-    });
-};
