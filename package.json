@@ -41,7 +41,7 @@
   "dependencies": {
     "casperjs": "^1.1.0-beta3",
     "phantomcss": "^0.7.0",
-    "temporary": "0.0.7"
+    "temporary": "0.0.8"
   },
   "peerDependencies": {
     "phantomjs": "~1.9.2-2",
