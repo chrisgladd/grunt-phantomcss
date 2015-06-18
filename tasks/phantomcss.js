@@ -11,13 +11,16 @@ var path = require('path');
 var tmp = require('temporary');
 var phantomBinaryPath = require('phantomjs').path;
 var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
-var phantomCSSPath = path.join(__dirname, '..', 'bower_components', 'phantomcss');
+var phantomCSSPath = path.join(__dirname, '..', 'node_modules', 'phantomcss');
+var casperJSPath = path.join(__dirname, '..', 'node_modules', 'casperjs');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
         var done = this.async();
 
         var options = this.options({
+            addLabelToFailedImage: true,
+            cleanupComparisonImages: true,
             screenshots: 'screenshots',
             results: 'results',
             viewportSize: [1280, 800],
@@ -57,16 +60,9 @@ module.exports = function(grunt) {
             // Remove temporary file
             tempFile.unlink();
 
-            // Create the output directory
-            grunt.file.mkdir(options.results);
-
-            // Copy fixtures, diffs, and failure images to the results directory
-            var allScreenshots = grunt.file.expand(path.join(options.screenshots, '**.png'));
-            allScreenshots.forEach(function(filepath) {
-                grunt.file.copy(filepath, path.join(options.results, path.basename(filepath)));
-            });
-
-            deleteDiffScreenshots();
+            if (options.cleanupComparisonImages) {
+              deleteDiffScreenshots();
+            }
 
             done(error || failureCount === 0);
         };
@@ -149,14 +145,12 @@ module.exports = function(grunt) {
         });
 
         options.screenshots = path.resolve(options.screenshots);
-
-        // Put failure screenshots in the same place as source screenshots, we'll move/delete them after the test run
-        // Note: This duplicate assignment is provided for clarity; PhantomCSS will put failures in the screenshots folder by default
-        options.failures = options.screenshots;
+        options.failures = (options.results) ? path.resolve(options.results) : false;
 
         // Pass necessary paths
         options.tempFile = tempFile.path;
         options.phantomCSSPath = phantomCSSPath;
+        options.casperJSPath = casperJSPath;
 
         // Remove old diff screenshots
         deleteDiffScreenshots();

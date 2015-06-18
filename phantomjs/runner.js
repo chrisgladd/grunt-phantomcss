@@ -15,8 +15,8 @@ var sendMessage = function() {
 };
 
 // Initialise CasperJs
-var phantomCSSPath = args.phantomCSSPath;
-phantom.casperPath = phantomCSSPath+s+'CasperJs';
+phantom.casperPath = args.casperJSPath;
+phantom.casperTest = true;
 phantom.injectJs(phantom.casperPath+s+'bin'+s+'bootstrap.js');
 
 var casper = require('casper').create({
@@ -26,11 +26,14 @@ var casper = require('casper').create({
 });
 
 // Require and initialise PhantomCSS module
+var phantomCSSPath = args.phantomCSSPath;
 var phantomcss = require(phantomCSSPath+s+'phantomcss.js');
 
 phantomcss.init({
+    addLabelToFailedImage: args.addLabelToFailedImage,
     screenshotRoot: args.screenshots,
-    failedComparisonsRoot: args.failures,
+    comparisonResultRoot: args.failures,
+    failedComparisonsRoot: false,
     libraryRoot: phantomCSSPath, // Give absolute path, otherwise PhantomCSS fails
 
     onFail: function(test) {
