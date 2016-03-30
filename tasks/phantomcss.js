@@ -2,16 +2,17 @@
  * grunt-phantomcss
  * https://github.com/chrisgladd/grunt-phantomcss
  *
- * Copyright (c) 2013 Chris Gladd
+ * Copyright (c) 2016 Chris Gladd
  * Licensed under the MIT license.
  */
 'use strict';
 
 var path = require('path');
-var tmp = require('temporary');
-var phantomBinaryPath = require('phantomjs').path;
+var tmp = require('tmp');
+var phantomBinaryPath = require('phantomjs-prebuilt').path;
 var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
-var phantomCSSPath = path.join(__dirname, '..', 'bower_components', 'phantomcss');
+var phantomCSSPath = path.join(__dirname, '..', 'node_modules', 'phantomcss');
+var casperPath = path.join(__dirname, '..', 'node_modules', 'casperjs');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
@@ -38,7 +39,7 @@ module.exports = function(grunt) {
         var cwd = process.cwd();
 
         // Create a temporary file for message passing between the task and PhantomJS
-        var tempFile = new tmp.File();
+        var tempFile = tmp.fileSync();
 
         var deleteDiffScreenshots = function() {
             // Find diff/fail files
@@ -55,7 +56,7 @@ module.exports = function(grunt) {
 
         var cleanup = function(error) {
             // Remove temporary file
-            tempFile.unlink();
+            tempFile.removeCallback();
 
             // Create the output directory
             grunt.file.mkdir(options.results);
@@ -76,7 +77,7 @@ module.exports = function(grunt) {
             grunt.log.muted = true;
 
             // Read the file, splitting lines on \n, and removing a trailing line
-            var lines = grunt.file.read(tempFile.path).split('\n').slice(0, -1);
+            var lines = grunt.file.read(tempFile.name).split('\n').slice(0, -1);
 
             // Re-enable logging
             grunt.log.muted = false;
@@ -155,8 +156,9 @@ module.exports = function(grunt) {
         options.failures = options.screenshots;
 
         // Pass necessary paths
-        options.tempFile = tempFile.path;
+        options.tempFile = tempFile.name;
         options.phantomCSSPath = phantomCSSPath;
+        options.casperPath = casperPath;
 
         // Remove old diff screenshots
         deleteDiffScreenshots();

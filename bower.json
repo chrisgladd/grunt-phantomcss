@@ -1,6 +1,6 @@
 {
   "name": "grunt-phantomcss",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "homepage": "https://github.com/chrisgladd/grunt-phantomcss",
   "authors": [
     "Chris Gladd <chris.m.gladd@gmail.com>",
@@ -27,6 +27,6 @@
     "tests"
   ],
   "dependencies": {
-    "phantomcss": "f0846511d9e1e55aa160aaab84e2a150bd3a5a41"
+    "phantomcss": "^1.0.0"
   }
 }

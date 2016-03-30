@@ -2,7 +2,7 @@
  * grunt-phantomcss
  * https://github.com/chrisgladd/grunt-phantomcss
  *
- * Copyright (c) 2013 Chris Gladd
+ * Copyright (c) 2016 Chris Gladd
  * Licensed under the MIT license.
  */
 
