@@ -122,7 +122,7 @@ module.exports = function(grunt) {
             onComplete: function(allTests, noOfFails, noOfErrors) {
                 if (allTests.length) {
                     var noOfPasses = allTests.length - failureCount;
-                    failureCount = noOfFails + noOfErrors;
+                    failureCount += noOfFails + noOfErrors;
 
                     if (failureCount === 0) {
                         grunt.log.ok('All ' + noOfPasses + ' tests passed!');
