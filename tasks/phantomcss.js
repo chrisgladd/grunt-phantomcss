@@ -12,7 +12,7 @@ var tmp = require('tmp');
 var phantomBinaryPath = require('phantomjs-prebuilt').path;
 var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
 var phantomCSSPath = path.join(__dirname, '..', 'node_modules', 'phantomcss');
-var casperPath = path.join(__dirname, '..', 'node_modules', 'casperjs');
+var casperPath = path.join(__dirname, '..', 'node_modules', 'phantomcss', 'node_modules', 'casperjs');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
