@@ -9,10 +9,39 @@
 
 var path = require('path');
 var tmp = require('tmp');
+var fs = require('fs');
+
+function resolveDirectory(pathPart, maxLevel) {
+    var pathPrefix = './';
+    var resultPath;
+    for (var i = 0; i < maxLevel; ++i) {
+        var folderPath = path.resolve(pathPrefix + pathPart);
+
+        try {
+            var stats = fs.statSync(folderPath);
+            if (stats.isDirectory()) {
+                resultPath = folderPath;
+                break;
+            }
+        } catch(e) {
+            // just do nothing and try the next path
+        }
+
+        pathPrefix = '../' + pathPrefix;
+    }
+
+    if (!resultPath) {
+        throw new Error('Cannot find ' + pathPart);
+    }
+
+    return resultPath;
+}
+
+
 var phantomBinaryPath = require('phantomjs-prebuilt').path;
 var runnerPath = path.join(__dirname, '..', 'phantomjs', 'runner.js');
-var phantomCSSPath = path.join(__dirname, '..', 'node_modules', 'phantomcss');
-var casperPath = path.join(__dirname, '..', 'node_modules', 'casperjs');
+var phantomCSSPath = resolveDirectory('node_modules/phantomcss', 5);
+var casperPath = resolveDirectory('node_modules/casperjs', 5);
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('phantomcss', 'CSS Regression Testing', function() {
