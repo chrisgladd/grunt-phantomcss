@@ -91,7 +91,7 @@ grunt.initConfig({
 ```
 
 #### Responsive layout testing
-Run tests in `test/visual/` against comparison screenshots for destop and mobile.
+Run tests in `test/visual/` against comparison screenshots for desktop and mobile.
 
 ```js
 grunt.initConfig({
