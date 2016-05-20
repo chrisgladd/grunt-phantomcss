@@ -12,7 +12,7 @@ var tmp = require('tmp');
 var fs = require('fs');
 
 function resolveDirectory(pathPart, maxLevel) {
-    var pathPrefix = './';
+    var pathPrefix = __dirname + '/';
     var resultPath;
     for (var i = 0; i < maxLevel; ++i) {
         var folderPath = path.resolve(pathPrefix + pathPart);
@@ -27,7 +27,7 @@ function resolveDirectory(pathPart, maxLevel) {
             // just do nothing and try the next path
         }
 
-        pathPrefix = '../' + pathPrefix;
+        pathPrefix += '../';
     }
 
     if (!resultPath) {
