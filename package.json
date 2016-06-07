@@ -38,7 +38,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "postinstall": "bower install"
+    "postinstall": "bower install --allow-root"
   },
   "devDependencies": {
     "grunt": ">=0.4.5",
