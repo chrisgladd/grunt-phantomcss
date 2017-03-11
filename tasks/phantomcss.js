@@ -19,10 +19,11 @@ module.exports = function(grunt) {
         var done = this.async();
 
         var options = this.options({
-            screenshots: 'screenshots',
+            logLevel: 'error',
+            mismatchTolerance: 0.05,
             results: 'results',
-            viewportSize: [1280, 800],
-            logLevel: 'error'
+            screenshots: 'screenshots',
+            viewportSize: [1280, 800]
         });
 
         // Timeout ID for message checking loop

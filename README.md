@@ -47,28 +47,35 @@ Type: `String|Array`
 The test files to run.
 
 #### options.screenshots
-Type: `String`  
+Type: `String`
 Default: `'./screenshots'`
 
 The screenshots directory where test fixtures (comparison screenshots) are stored. Baseline screenshots will be stored here on the first run if they're not present.
 
 #### options.results
-Type: `String`  
+Type: `String`
 Default: `'./results'`
 
 The directory to store source, diff, and failure screenshots after tests.
 
 #### options.viewportSize
-Type: `Array`  
+Type: `Array`
 Default: `[1280, 800]`
 
-The viewport size to test the site in `[width, height]` format. Useful when testing responsive layouts. 
+The viewport size to test the site in `[width, height]` format. Useful when testing responsive layouts.
 
 #### options.logLevel
-Type: `String`  
+Type: `String`
 Default: `error`
 
 The CasperJS log level. See [CasperJS: Logging](http://casperjs.readthedocs.org/en/latest/logging.html) for details.
+
+
+#### options.mismatchTolerance
+Type: `Float`
+Default: 0.05
+
+Mismatch tolerance defaults to  0.05%. Increasing this value will decrease test coverage. See [PhantomCSS](https://github.com/Huddle/PhantomCSS) for details.
 
 
 ### Usage Examples

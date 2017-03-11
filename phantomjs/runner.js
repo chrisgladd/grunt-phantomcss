@@ -21,6 +21,7 @@ phantom.injectJs([args.casperPath, 'bin', 'bootstrap.js'].join(fs.separator));
 var casper = require('casper').create({
     "viewportSize": viewportSize,
     "logLevel": args.logLevel,
+    "logLevel": args.logLevel,
     "verbose": true
 });
 
@@ -29,15 +30,14 @@ var phantomcss = require('phantomcss');
 
 phantomcss.init({
     "libraryRoot": args.phantomCSSPath, // Give absolute path, otherwise PhantomCSS fails
-
     "screenshotRoot": args.screenshots,
     "failedComparisonsRoot": args.failures,
 
     /**
-     * Mismatch tolerance defaults to  0.05%. Increasing this value 
+     * Mismatch tolerance defaults to  0.05%. Increasing this value
      * will decrease test coverage
      */
-    "mismatchTolerance": 0.05,
+    "mismatchTolerance": args.mismatchTolerance,
 
     "onFail": function(test) {
         sendMessage('onFail', test);
